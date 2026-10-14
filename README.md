@@ -64,10 +64,6 @@ git clone https://github.com/pdlong-09/macros_tracker.git
 
 Then open `index.html` in any browser. That's it.
 
-## What I learned
-
-[Long: 2–3 sentences in your own words. For example, why you kept rebuilding the first version, or how you decided what to make one-tap.]
-
 ## Limitations
 
 - **Nothing is saved.** Refreshing the page clears the day, the same as pressing Reset.
