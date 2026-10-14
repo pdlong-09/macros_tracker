@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MACROS TRACKER</title>
+    <style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        width: 1500px;
+        height: 800px;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        padding: 18px 60px 16px 60px;
+        background-color: #f2f2f2;
+        color: black;
+    }
+    .top-row {
+        display: grid;
+        grid-template-columns: 320px 1fr 145px;
+        align-items: center;
+        height: 94px;
+        margin-bottom: 2px;
+    }
+    .water-tracker {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .droplet-btn {
+        width: 66px;
+        height: 90px;
+        border: none;
+        background: transparent;
+        padding: 0;
+        cursor: pointer;
+    }
+    .droplet-svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
+    .droplet-path {
+        fill: #b3b3b3;
+        transition: fill 0.2s ease;
+    }
+
+    .droplet-btn.active .droplet-path {
+        fill: #3047ea;
+    }
+    .title {
+        font-size: 50px;
+        margin: 0;
+        font-weight: 800;
+        text-align: center;
+    }
+
+    #resetBtn {
+        justify-self: end;
+        width: 128px;
+        height: 62px;
+        font-size: 28px;
+        font-weight: 800;
+        background: white;
+        border: 5px solid black;
+        border-radius: 14px;
+        cursor: pointer;
+    }
+    .macro-section {
+        margin-bottom: 14px;
+    }
+    .macro-name {
+        font-size: 40px;
+        font-weight: 800;
+        margin: 0 0 2px 0;
+        line-height: 1;
+    }
+    .macro-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .bar-container {
+        flex: 1;
+        height: 56px;
+        border: 5px solid black;
+        border-radius: 13px;
+        position: relative;
+        overflow: hidden;
+        background: white;
+    }
+    .bar-fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 7px;
+        transition: width 0.2s ease;
+    }
+    .bar-text {
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 26px;
+        font-weight: 800;
+    }
+    .input-box {
+        width: 118px;
+        height: 56px;
+        border: 5px solid black;
+        font-size: 23px;
+        padding: 4px 9px;
+        background: white;
+    }
+    .input-box::placeholder {
+        color: #aaa;
+    }
+    .small-btn {
+        width: 58px;
+        height: 56px;
+        border: 5px solid black;
+        background: white;
+        font-size: 38px;
+        font-weight: 900;
+        cursor: pointer;
+        line-height: 1;
+    }
+    .common-title {
+        font-size: 44px;
+        font-weight: 800;
+        margin: 20px 0 12px 0;
+        line-height: 1;
+    }
+    .common-foods {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+    }
+    .food-btn {
+        width: 150px;
+        height: 126px;
+        border: 5px solid black;
+        border-radius: 26px;
+        background: white;
+        font-size: 26px;
+        font-weight: 800;
+        cursor: pointer;
+        line-height: 1.22;
+    }
+    .food-btn:focus {
+        outline: none;
+    }
+    .food-card {
+        width: 150px;
+        height: 126px;
+        border: 5px solid black;
+        border-radius: 26px;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+    .food-name {
+        font-size: 25px;
+        font-weight: 800;
+        text-align: center;
+        line-height: 1.15;
+    }
+    .gram-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .gram-input {
+        width: 70px;
+        height: 34px;
+        border: 3px solid black;
+        font-size: 18px;
+        font-weight: 700;
+        text-align: center;
+        background: white;
+    }
+    .gram-input::placeholder {
+        color: #aaa;
+    }
+    .gram-plus {
+        width: 34px;
+        height: 34px;
+        border: 3px solid black;
+        background: white;
+        font-size: 24px;
+        font-weight: 900;
+        line-height: 1;
+        cursor: pointer;
+    }
+    .calories-fill {
+        background-color: #5ab3d0;
+    }
+
+    .protein-fill {
+        background-color: #5dbc86;
+    }
+
+    .carbs-fill {
+        background-color: #eb9555;
+    }
+
+    .fats-fill {
+        background-color: #ee615d;
+    }
+    </style>
+</head>
+<body>
+
+    <div class="top-row">
+
+        <div class="water-tracker">
+            <button class="droplet-btn" id="drop0" onclick="toggleWater(0)" title="Bottle 1">
+                <svg viewBox="0 0 64 90" class="droplet-svg">
+                    <path class="droplet-path" d="M32 4 C32 4, 7 37, 7 56 C7 74, 18 86, 32 86 C46 86, 57 74, 57 56 C57 37, 32 4, 32 4 Z"></path>
+                </svg>
+            </button>
+
+            <button class="droplet-btn" id="drop1" onclick="toggleWater(1)" title="Bottle 2">
+                <svg viewBox="0 0 64 90" class="droplet-svg">
+                    <path class="droplet-path" d="M32 4 C32 4, 7 37, 7 56 C7 74, 18 86, 32 86 C46 86, 57 74, 57 56 C57 37, 32 4, 32 4 Z"></path>
+                </svg>
+            </button>
+
+            <button class="droplet-btn" id="drop2" onclick="toggleWater(2)" title="Bottle 3">
+                <svg viewBox="0 0 64 90" class="droplet-svg">
+                    <path class="droplet-path" d="M32 4 C32 4, 7 37, 7 56 C7 74, 18 86, 32 86 C46 86, 57 74, 57 56 C57 37, 32 4, 32 4 Z"></path>
+                </svg>
+            </button>
+
+            <button class="droplet-btn" id="drop3" onclick="toggleWater(3)" title="Bottle 4">
+                <svg viewBox="0 0 64 90" class="droplet-svg">
+                    <path class="droplet-path" d="M32 4 C32 4, 7 37, 7 56 C7 74, 18 86, 32 86 C46 86, 57 74, 57 56 C57 37, 32 4, 32 4 Z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <h1 class="title">MACROS TRACKER</h1>
+
+        <button id="resetBtn" onclick="resetAll()">Reset</button>
+
+    </div>
+
+    <div class="macro-section">
+        <h2 class="macro-name">Calories</h2>
+        <div class="macro-row">
+            <div class="bar-container">
+                <div id="caloriesFill" class="bar-fill calories-fill"></div>
+                <div id="caloriesText" class="bar-text">0/1700</div>
+            </div>
+            <input id="caloriesInput" class="input-box" type="number" placeholder="enter...">
+
+            <button class="small-btn" onclick="subtractAmount('calories')">-</button>
+            <button class="small-btn" onclick="addAmount('calories')">+</button>
+        </div>
+    </div>
+
+    <div class="macro-section">
+        <h2 class="macro-name">Protein</h2>
+
+        <div class="macro-row">
+            <div class="bar-container">
+                <div id="proteinFill" class="bar-fill protein-fill"></div>
+                <div id="proteinText" class="bar-text">0/200</div>
+            </div>
+
+            <input id="proteinInput" class="input-box" type="number" placeholder="enter...">
+
+            <button class="small-btn" onclick="subtractAmount('protein')">-</button>
+            <button class="small-btn" onclick="addAmount('protein')">+</button>
+        </div>
+    </div>
+
+    <div class="macro-section">
+        <h2 class="macro-name">Carbs</h2>
+
+        <div class="macro-row">
+            <div class="bar-container">
+                <div id="carbsFill" class="bar-fill carbs-fill"></div>
+                <div id="carbsText" class="bar-text">0/100</div>
+            </div>
+
+            <input id="carbsInput" class="input-box" type="number" placeholder="enter...">
+
+            <button class="small-btn" onclick="subtractAmount('carbs')">-</button>
+            <button class="small-btn" onclick="addAmount('carbs')">+</button>
+        </div>
+    </div>
+
+    <div class="macro-section">
+        <h2 class="macro-name">Fats</h2>
+
+        <div class="macro-row">
+            <div class="bar-container">
+                <div id="fatsFill" class="bar-fill fats-fill"></div>
+                <div id="fatsText" class="bar-text">0/100</div>
+            </div>
+
+            <input id="fatsInput" class="input-box" type="number" placeholder="enter...">
+
+            <button class="small-btn" onclick="subtractAmount('fats')">-</button>
+            <button class="small-btn" onclick="addAmount('fats')">+</button>
+        </div>
+    </div>
+
+    <h2 class="common-title">Common foods</h2>
+
+    <div class="common-foods">
+
+        <div class="food-card">
+            <div class="food-name">Beef<br>steak</div>
+
+            <div class="gram-row">
+                <input 
+                    id="beefSteakGrams" 
+                    class="gram-input" 
+                    type="number" 
+                    placeholder="g"
+                    onkeydown="handleGramEnter(event, 'beefSteak')"
+                >
+
+                <button class="gram-plus" onclick="addFoodByGrams('beefSteak')">+</button>
+            </div>
+        </div>
+
+        <div class="food-card">
+            <div class="food-name">Salmon</div>
+
+            <div class="gram-row">
+                <input 
+                    id="salmonGrams" 
+                    class="gram-input" 
+                    type="number" 
+                    placeholder="g"
+                    onkeydown="handleGramEnter(event, 'salmon')"
+                >
+
+                <button class="gram-plus" onclick="addFoodByGrams('salmon')">+</button>
+            </div>
+        </div>
+
+        <div class="food-card">
+            <div class="food-name">Chicken<br>Breast</div>
+
+            <div class="gram-row">
+                <input 
+                    id="chickenBreastGrams" 
+                    class="gram-input" 
+                    type="number" 
+                    placeholder="g"
+                    onkeydown="handleGramEnter(event, 'chickenBreast')"
+                >
+
+                <button class="gram-plus" onclick="addFoodByGrams('chickenBreast')">+</button>
+            </div>
+        </div>
+<!--HOANG MINH LON DIEN DAY-->
+        <button class="food-btn" onclick="addCommonFood('whey')">Whey</button>
+        <button class="food-btn" onclick="addCommonFood('monster')">Monster</button>
+        <button class="food-btn" onclick="addCommonFood('fourPsSalad')">4Ps<br>Salad</button>
+
+    </div>
+
+    <script>
+    class Bar {
+        constructor(name, max) {
+            this.name = name;
+            this.progress = 0;
+            this.max = max;
+        }
+
+        add(a) {
+            this.progress += a;
+        }
+
+        sub(a) {
+            this.progress -= a;
+
+            if (this.progress < 0) {
+                this.progress = 0;
+            }
+        }
+
+        reset() {
+            this.progress = 0;
+        }
+    }
+
+/*HOANG MINH LON DIEN DAY*/
+    const cal = new Bar("Calories", 1700); // calorie target
+    const pro = new Bar("Protein", 200);   // protein target in grams
+    const carb = new Bar("Carbs", 100);    // carbs target in grams
+    const fat = new Bar("Fats", 100);      // fats target in grams
+
+    const bars = {
+        calories: cal,
+        protein: pro,
+        carbs: carb,
+        fats: fat
+    };
+
+
+    const WATER_BOTTLE_ML = 900;
+    const WATER_BOTTLE_TARGET = 4;
+
+    let waterState = [false, false, false, false];
+
+/*HOANG MINH LON DIEN DAY*/
+    const commonFoods = {
+        whey: {
+            calories: 145,
+            protein: 30,
+            carbs: 4,
+            fats: 1
+        },
+
+        monster: {
+            calories: 10,
+            protein: 0,
+            carbs: 3,
+            fats: 0
+        },
+
+        fourPsSalad: {
+            calories: 328,
+            protein: 22,
+            carbs: 18,
+            fats: 21
+        }
+    };
+    const gramFoods = {
+        beefSteak: {
+            inputId: "beefSteakGrams",
+            calories: 178,
+            protein: 28.0,
+            carbs: 0,
+            fats: 6.5
+        },
+        salmon: {
+            inputId: "salmonGrams",
+            calories: 206,
+            protein: 22.1,
+            carbs: 0,
+            fats: 12.4
+        },
+        chickenBreast: {
+            inputId: "chickenBreastGrams",
+            calories: 165,
+            protein: 31.0,
+            carbs: 0,
+            fats: 3.6
+        }
+    };
+
+    function addAmount(type) {
+        const input = document.getElementById(type + "Input");
+        const amount = Number(input.value);
+
+        if (isNaN(amount) || amount <= 0) {
+            return;
+        }
+
+        bars[type].add(amount);
+        input.value = "";
+        updateDisplay();
+    }
+
+    function subtractAmount(type) {
+        const input = document.getElementById(type + "Input");
+        const amount = Number(input.value);
+
+        if (isNaN(amount) || amount <= 0) {
+            return;
+        }
+
+        bars[type].sub(amount);
+        input.value = "";
+        updateDisplay();
+    }
+
+    function addCommonFood(foodName) {
+        const food = commonFoods[foodName];
+
+        cal.add(food.calories);
+        pro.add(food.protein);
+        carb.add(food.carbs);
+        fat.add(food.fats);
+
+        updateDisplay();
+    }
+
+    function addFoodByGrams(foodName) {
+        const food = gramFoods[foodName];
+        const input = document.getElementById(food.inputId);
+
+        const grams = Number(input.value);
+
+        if (isNaN(grams) || grams <= 0) {
+            return;
+        }
+
+        const multiplier = grams / 100;
+
+        cal.add(roundToOne(food.calories * multiplier));
+        pro.add(roundToOne(food.protein * multiplier));
+        carb.add(roundToOne(food.carbs * multiplier));
+        fat.add(roundToOne(food.fats * multiplier));
+
+        input.value = "";
+        updateDisplay();
+    }
+
+    function handleGramEnter(event, foodName) {
+        if (event.key === "Enter") {
+            addFoodByGrams(foodName);
+        }
+    }
+
+    function toggleWater(index) {
+        waterState[index] = !waterState[index];
+        updateWaterDisplay();
+    }
+
+    function updateWaterDisplay() {
+        for (let i = 0; i < WATER_BOTTLE_TARGET; i++) {
+            const drop = document.getElementById("drop" + i);
+
+            if (waterState[i]) {
+                drop.classList.add("active");
+            } else {
+                drop.classList.remove("active");
+            }
+
+            const totalFilled = getWaterCount();
+            const totalMl = totalFilled * WATER_BOTTLE_ML;
+
+            drop.title =
+                "Bottle " + (i + 1) +
+                " • " +
+                (waterState[i] ? "filled" : "empty") +
+                " • " +
+                totalFilled + "/" + WATER_BOTTLE_TARGET +
+                " bottles • " +
+                totalMl + "ml";
+        }
+    }
+
+    function getWaterCount() {
+        let count = 0;
+
+        for (let i = 0; i < waterState.length; i++) {
+            if (waterState[i]) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    function resetWater() {
+        waterState = [false, false, false, false];
+        updateWaterDisplay();
+    }
+
+    function resetAll() {
+        cal.reset();
+        pro.reset();
+        carb.reset();
+        fat.reset();
+
+        resetWater();
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        updateOneBar("calories", cal);
+        updateOneBar("protein", pro);
+        updateOneBar("carbs", carb);
+        updateOneBar("fats", fat);
+    }
+
+    function updateOneBar(type, bar) {
+        const percentage = Math.min((bar.progress / bar.max) * 100, 100);
+
+        document.getElementById(type + "Fill").style.width = percentage + "%";
+
+        document.getElementById(type + "Text").textContent =
+            formatNumber(bar.progress) + "/" + bar.max;
+    }
+
+    function roundToOne(number) {
+        return Math.round(number * 10) / 10;
+    }
+
+    function formatNumber(number) {
+        if (Number.isInteger(number)) {
+            return number;
+        }
+
+        return number.toFixed(1);
+    }
+
+    updateDisplay();
+    updateWaterDisplay();
+    </script>
+</body>
+</html>
