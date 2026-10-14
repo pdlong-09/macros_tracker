@@ -79,6 +79,8 @@ Then open `index.html` in any browser. That's it.
   <img src="docs/in-use.png" width="49%" alt="Partway through the day">
 </p>
 
+> **About the Claude co-author:** Claude was used only to upload these files, which I had already written and stored locally, to GitHub, and to write this README and its supporting files (such as screenshots, `.gitignore` and `requirements.txt`). The code itself is my own work.
+
 ---
 
 <sub>Phạm Duy Long · Hà Nội · [phamduylong.com](https://phamduylong.com)</sub>
